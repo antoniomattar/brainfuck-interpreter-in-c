@@ -22,7 +22,7 @@ char* get_input_prog(char* input_filename) {
     rewind(file);
 
     // on alloue en memoire la taille necessaire pr stocker les char du fichier
-    char* buffer = (char*) calloc(file_size + 1, sizeof(uint8_t));
+    char* buffer = (char*) calloc(file_size + 1, sizeof(char));
 
     if (buffer == NULL) {
         printf("Le systeme n'a pas pus allouer totalement la memoire necessaire pour lire le code");
@@ -63,10 +63,8 @@ void free_loops(void* loops) {
 }
 
 void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
-    while (**ipp != '\0')
+    switch (**ipp)
     {
-        switch (**ipp)
-        {
         case '>':
             (*dpp)++;
             break;
@@ -91,8 +89,6 @@ void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
             break;
         default:
             break;
-        }
-        (*ipp)++;
     }
-    
+    (*ipp)++;
 }
