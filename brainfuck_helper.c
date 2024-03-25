@@ -63,5 +63,36 @@ void free_loops(void* loops) {
 }
 
 void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
-    return;
+    while (**ipp != '\0')
+    {
+        switch (**ipp)
+        {
+        case '>':
+            (*dpp)++;
+            break;
+        case '<':
+            (*dpp)--;
+            break;
+        case '+':
+            (**dpp)++;
+            break;
+        case '-':
+            (**dpp)--;
+            break;
+        case '.':
+            putchar(**dpp);
+            break;
+        case ',':
+            **dpp = getchar();
+            break;
+        case '[':
+            break;
+        case ']':
+            break;
+        default:
+            break;
+        }
+        (*ipp)++;
+    }
+    
 }

@@ -17,3 +17,7 @@
 
 #include "brainfuck_helper.h"
 
+Test(test_execute_instruction, test1, .timeout = 5)
+{
+
+}
