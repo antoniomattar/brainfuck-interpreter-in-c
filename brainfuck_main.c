@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
         instruction_id++;
         execute_instruction(&ip, &dp, loops);
     }
+    printf("\n");
     free(data_array);
     free_loops(loops);
     
