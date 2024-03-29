@@ -48,6 +48,8 @@ To run the unit tests, use the following command:
 make test
 ```
 
+Other wise, the test folder is full of fun small programs to test, do not hesitate to check it !
+
 ## Logic
 
 The Brainfuck interpreter works by reading Brainfuck programs, which are text files containing Brainfuck commands. Each command is a single character:
