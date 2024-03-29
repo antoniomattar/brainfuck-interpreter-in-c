@@ -56,9 +56,39 @@ void free_input_prog(char* input_prog) {
 
 // on cree une structure de donne Tuple qui contiendra les indices de debut et de fin de chaque boucle
 typedef struct Tuple {
-    int start_index;
-    int end_index;
+    char* start_index;
+    char* end_index;
 } Tuple;
+
+typedef struct Stack {
+    char **indexes;
+    int size;
+    int capacity;
+} Stack;
+
+Stack* stack_init(int capacity) {
+    struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));
+    stack->indexes = (char**) calloc(capacity, sizeof(char*));
+    stack->size = 0;
+    stack->capacity = capacity;
+    return stack;
+}
+
+void stack_push(struct Stack* stack, char* index) {
+    if (stack->size == stack->capacity) {
+        return;
+    }
+    stack->indexes[stack->size] = index;
+    stack->size++;
+}
+
+char* stack_pop(struct Stack* stack) {
+    if (stack->size == 0) {
+        return NULL;
+    }
+    stack->size--;
+    return stack->indexes[stack->size];
+}
 
 int count_loops(char* input_org) {
     // on suppose que le code est bien ecrit et bien paranthesé
@@ -75,38 +105,27 @@ int count_loops(char* input_org) {
 void* build_loops(char* input_prog) {
 
     int loops_count = count_loops(input_prog);
-    
-    // on alloue en memoire la taille necessaire pr stocker les tuples d'indices
-    Tuple* loops = (Tuple*) calloc(loops_count, sizeof(Tuple));
 
-    if (loops == NULL) {
-        printf("Le systeme n'a pas pus allouer totalement la memoire necessaire pour stocker les boucles");
-        return NULL;
-    }
+    struct Stack* stack = stack_init(loops_count);
 
-    // on utilise une pile pr stocker les indices de debut de boucle et on les depile lorsqu'on trouve le bon indice de fin
-    // tout en creant les tuples
-    int* stack = (int*) calloc(loops_count, sizeof(int));
-    int stack_size = 0;
-    int index = 0;
-    
+    struct Tuple* loops = (struct Tuple*) malloc(loops_count * sizeof(struct Tuple));
+
+    struct Tuple* current_loop = loops;
+
     while (*input_prog != '\0') {
-
         if (*input_prog == '[') {
-            stack[stack_size] = index;
-            stack_size++;
+            stack_push(stack, input_prog);
         } else if (*input_prog == ']') {
-            stack_size--;
-            loops[stack_size].start_index = stack[stack_size];
-            loops[stack_size].end_index = index;
-            printf("start: %d, end: %d\n", loops[stack_size].start_index, loops[stack_size].end_index);
+            char* start_index = stack_pop(stack);
+            char* end_index = input_prog;
+            current_loop->start_index = start_index;
+            current_loop->end_index = end_index;
+            current_loop++;
         }
-
-        index++;
         input_prog++;
     }
 
-    return (void *) loops;
+    return (void*) loops;
 }
 
 void free_loops(void* loops) {
@@ -116,7 +135,7 @@ void free_loops(void* loops) {
 
 void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
     // recast loops vers Tuple
-    struct Tuple* loops = (struct Tuple*) loops;
+    struct Tuple* couples = (struct Tuple*) loops;
     switch (**ipp)
     {
         case '>':
@@ -138,8 +157,20 @@ void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
             **dpp = getchar();
             break;
         case '[':
+            if (**dpp == 0) {
+                while (couples->start_index != *ipp) {
+                    couples++;
+                }
+                *ipp = couples->end_index;
+            }
             break;
         case ']':
+            if (**dpp != 0) {
+                while (couples->end_index != *ipp) {
+                    couples++;
+                }
+                *ipp = couples->start_index;
+            }
             break;
         default:
             break;
