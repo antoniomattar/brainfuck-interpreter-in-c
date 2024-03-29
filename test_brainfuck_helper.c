@@ -24,7 +24,6 @@ Test(get_input_prog, test_file_exists)
 
 Test(get_input_prog, test_file_not_exists)
 {
-    printf("TRYING TO OPEN A NON EXISTENT FILE:\n");
 
     char *input_filename = "nonexistent_file.txt";
 

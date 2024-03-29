@@ -8,7 +8,6 @@ char* get_input_prog(char* input_filename) {
     FILE* file = fopen(input_filename, "rb");
 
     if (file == NULL) {
-        fprintf(stderr, "Le fichier '%s' n'existe probablement pas!\n", input_filename);
         return NULL;
     }
 
