@@ -4,10 +4,7 @@ LD = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 LDFLAGS= -lcriterion
 
-all: brainfuck test_brainfuck_helper
-
-test_brainfuck_helper: brainfuck_helper.o test_brainfuck_helper.o
-	$(CC) $^ -o $@ $(LDFLAGS)
+all: brainfuck
 
 brainfuck: brainfuck_helper.o brainfuck_main.o
 	$(CC) $(CFLAGS) $^ -o $@
@@ -21,11 +18,16 @@ test_brainfuck_helper.o : test_brainfuck_helper.c
 brainfuck_main.o : brainfuck_main.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+test_brainfuck_helper: brainfuck_helper.o test_brainfuck_helper.o
+	$(CC) $^ -o $@ $(LDFLAGS)
+
 clean:
 	rm -f brainfuck_helper.o brainfuck_main.o test_brainfuck_helper.o brainfuck test_brainfuck_helper
-
 
 .PHONY: progress
 
 progress:
 	@../../../.progress/update $(shell basename "$(shell pwd)")
+
+test: test_brainfuck_helper
+	./test_brainfuck_helper

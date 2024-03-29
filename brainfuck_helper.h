@@ -3,6 +3,17 @@
 
 #define DATA_ARRAY_SIZE 32000
 
+typedef struct Tuple {
+    char* start_index;
+    char* end_index;
+} Tuple;
+
+typedef struct Stack {
+    char **indexes;
+    int size;
+    int capacity;
+} Stack;
+
 /**
  * @brief Récupère le programme Brainfuck à interpréter depuis un fichier
  *
@@ -46,3 +57,32 @@ void free_loops(void* loops);
  * @param loops le "quelque chose" représentant les boucles, cf 'build_loops'.
  */
 void execute_instruction(char** ipp, uint8_t** dpp, void* loops);
+
+/**
+ * @brief Compte le nombre de boucles dans notre code .bf (en assumant qu'on est bien paranthésé)
+ *
+ * @param input_prog un pointeur vers la premiere chaine de charactere de notre code.
+ */
+int count_loops(char* input_org);
+
+/**
+ * @brief Retourne un pointeur vers une pile de char* vide et de taille capacity.
+ *
+ * @param capacity un entier qui indique la taille de notre pile.
+ */
+Stack* stack_init(int capacity);
+
+/**
+ * @brief Retourne un pointeur vers une pile de char* vide et de taille capacity.
+ *
+ * @param stack un pointeur vers la pile.
+ * @param index un pointeur de char qu'on cherche a ajouter a notre pile.
+ */
+void stack_push(struct Stack *stack, char *index);
+
+/**
+ * @brief Enleve l'element au top de la pile et le retourne
+ *
+ * @param stack un pointer vers la pile.
+ */
+char* stack_pop(struct Stack *stack);

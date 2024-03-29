@@ -8,7 +8,7 @@ char* get_input_prog(char* input_filename) {
     FILE* file = fopen(input_filename, "rb");
 
     if (file == NULL) {
-        printf("Le fichier n'existe probablement pas!");
+        fprintf(stderr, "Le fichier '%s' n'existe probablement pas!\n", input_filename);
         return NULL;
     }
 
@@ -53,18 +53,6 @@ char* get_input_prog(char* input_filename) {
 void free_input_prog(char* input_prog) {
     free(input_prog);
 }
-
-// on cree une structure de donne Tuple qui contiendra les indices de debut et de fin de chaque boucle
-typedef struct Tuple {
-    char* start_index;
-    char* end_index;
-} Tuple;
-
-typedef struct Stack {
-    char **indexes;
-    int size;
-    int capacity;
-} Stack;
 
 Stack* stack_init(int capacity) {
     struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));
@@ -125,6 +113,9 @@ void* build_loops(char* input_prog) {
         input_prog++;
     }
 
+    free(stack->indexes);
+    free(stack);
+
     return (void*) loops;
 }
 
@@ -133,8 +124,8 @@ void free_loops(void* loops) {
     return;
 }
 
-void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
-    // recast loops vers Tuple
+void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {  
+    // on cast les void* en struct Tuple*
     struct Tuple* couples = (struct Tuple*) loops;
     switch (**ipp)
     {
