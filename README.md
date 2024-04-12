@@ -48,7 +48,7 @@ To run the unit tests, use the following command:
 make test
 ```
 
-Other wise, the test folder is full of fun small programs to test, do not hesitate to check it !
+Other wise, **the test folder is full of fun small programs to test, do not hesitate to check it !**
 
 ## Logic
 
@@ -65,3 +65,5 @@ The Brainfuck interpreter works by reading Brainfuck programs, which are text fi
 
 The interpreter reads these commands and performs the corresponding operations on an array of bytes, which is initialized to zero at the start of the program. The 'data pointer' mentioned above is an index into this array.
 
+
+Author: Antonio MATTAR
