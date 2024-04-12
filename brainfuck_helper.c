@@ -4,25 +4,27 @@
 #include <stdio.h>
 
 char* get_input_prog(char* input_filename) {
-    // on utilise la fonction fopen pr avoir un pointeur vers une variable de type FILE
+    // On utilise la fonction fopen pr avoir un pointeur vers une variable de type FILE
     FILE* file = fopen(input_filename, "rb");
 
+    // On test si notre fichier_existe (meme si on le fait encore dans le main)
     if (file == NULL) {
         return NULL;
     }
 
-    // on parcours jusqu a la fin du fichier
+    // On parcours jusqu a la fin du fichier
     fseek(file, 0, SEEK_END);
 
-    // on appelle la fonction ftell qui nous donne la position du byte sur lequel on se situe (ici c'est bien le dernier)
+    // On appelle la fonction ftell qui nous donne la position du byte sur lequel on se situe (ici c'est bien le dernier)
     long file_size = ftell(file);
 
-    // apres avoir recup la taille on reviens au premier byte 
+    // Après avoir recuperer la taille on reviens au premier byte 
     rewind(file);
 
     // on alloue en memoire la taille necessaire pr stocker les char du fichier
     char* buffer = (char*) calloc(file_size + 1, sizeof(char));
 
+    // Si on a pas pus allouer assez de memoire (et donc buffer == NULL), on informe l'utilisateur
     if (buffer == NULL) {
         printf("Le systeme n'a pas pus allouer totalement la memoire necessaire pour lire le code");
         fclose(file);
@@ -99,10 +101,14 @@ void* build_loops(char* input_prog) {
 
     struct Tuple* current_loop = loops;
 
+    // On parcours le code une et une seule fois
     while (*input_prog != '\0') {
+        // Des qu'on trouve un [ on push l'index de ce [ dans notre pile
         if (*input_prog == '[') {
             stack_push(stack, input_prog);
         } else if (*input_prog == ']') {
+            // Des qu'on trouve un ] on pop l'index du [ correspondant de notre pile
+            // et on stocke les indexes de ces 2 caracteres dans notre liste de couples (Tuple)
             char* start_index = stack_pop(stack);
             char* end_index = input_prog;
             current_loop->start_index = start_index;
@@ -112,6 +118,7 @@ void* build_loops(char* input_prog) {
         input_prog++;
     }
 
+    // On libere la memoire de notre pile
     free(stack->indexes);
     free(stack);
 
@@ -148,6 +155,9 @@ void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
             break;
         case '[':
             if (**dpp == 0) {
+                // si on est sur un [ et que la valeur du pointeur de data est 0
+                // on cherche le couple de ] correspondant et on saute directement dessus
+                // donc on parcours notre stack
                 while (couples->start_index != *ipp) {
                     couples++;
                 }
@@ -156,6 +166,9 @@ void execute_instruction(char** ipp, uint8_t** dpp, void* loops) {
             break;
         case ']':
             if (**dpp != 0) {
+                // si on est sur un ] et que la valeur du pointeur de data est different de 0
+                // on cherche le couple de [ correspondant pour revenir dessus et reboucler
+                // donc on parcours notre stack
                 while (couples->end_index != *ipp) {
                     couples++;
                 }

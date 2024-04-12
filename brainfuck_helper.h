@@ -3,11 +3,13 @@
 
 #define DATA_ARRAY_SIZE 32000
 
+// Structure Tuple pour stocker les adresses des couples de boucles [ et ]
 typedef struct Tuple {
     char* start_index;
     char* end_index;
 } Tuple;
 
+// Structure utiliser pour recupérer les bons couples de boucles [ et ] (en supposant qu'on est bien paranthésé!)
 typedef struct Stack {
     char **indexes;
     int size;
