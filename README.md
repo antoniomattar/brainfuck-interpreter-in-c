@@ -15,7 +15,7 @@ To compile the Brainfuck interpreter, you need to have a C compiler installed on
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/brainfuck-interpreter-in-c.git
+    git clone https://github.com/antoniomattar/brainfuck-interpreter-in-c.git
     ```
 
 2. Navigate to the project directory:
@@ -47,6 +47,8 @@ To run the unit tests, use the following command:
 ```bash
 make test
 ```
+
+Other wise, the test folder is full of fun small programs to test, do not hesitate to check it !
 
 ## Logic
 
